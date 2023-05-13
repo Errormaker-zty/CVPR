@@ -38,10 +38,10 @@ class SGD(object):
             # crappy implementation, not my bad
             if (isinstance(l, L.Linear)):
                 self.params_ref.append((l.weight, l.bias))
-            elif (isinstance(l, L.BatchNorm1d)):
-                self.params_ref.append((l.gamma, l.beta))
-            elif (isinstance(l, L.BatchNorm2d)):
-                self.params_ref.append((l.gamma, l.beta))
+            # elif (isinstance(l, L.BatchNorm1d)):
+                # self.params_ref.append((l.gamma, l.beta))
+            # elif (isinstance(l, L.BatchNorm2d)):
+                # self.params_ref.append((l.gamma, l.beta))
             elif (isinstance(l, L.ReLU)):
                 self.params_ref.append(())
             elif (isinstance(l, L.CrossEntropyLossWithSoftmax)):

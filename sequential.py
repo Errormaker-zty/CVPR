@@ -26,7 +26,8 @@ class Sequential(object):
         for l in self.layers[:-1]:
             # print(x.shape)
             # print(type(l))
-            if (type(l) in (L.BatchNorm1d, L.BatchNorm2d, L.BottleNeck, L.BasicBlock)):
+            # if (type(l) in (L.BatchNorm1d, L.BatchNorm2d, L.BottleNeck, L.BasicBlock)):
+            if (type(l) in (L.BottleNeck, L.BasicBlock)):
                 x = l.forward(x, train_mode)
             else:
                 x = l.forward(x)
