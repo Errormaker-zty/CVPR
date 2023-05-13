@@ -7,7 +7,7 @@ class ResNet(Sequential):
         self.in_channels = 64
         super().__init__([
             L.Conv2d(input_channel, 64, (7, 7), padding=3, stride=2),#, bias=False)
-            L.BatchNorm2d(64),
+            # L.BatchNorm2d(64),
             # L.MaxPool2d((3, 3), padding=1, stride=2), # original implementation
             L.MaxPool2d((2, 2), padding=0, stride=2),
             L.ReLU(),
@@ -26,7 +26,7 @@ class ResNet(Sequential):
         if stride != 1 or self.in_channels != out_channels*block.expansion:
             downsample = [
                 L.Conv2d(self.in_channels, out_channels*block.expansion, (1, 1), stride=stride),#, bias=False)
-                L.BatchNorm2d(out_channels*block.expansion)
+                # L.BatchNorm2d(out_channels*block.expansion)
             ]
         layers = []
         layers.append(block(self.in_channels, out_channels, stride, downsample))
