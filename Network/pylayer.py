@@ -56,14 +56,14 @@ class Linear(object):
             grad_weight -- numpy array of shape (input_channel, output_channel), gradient w.r.t weight
             grad_bias --  numpy array of shape (output_channel), gradient w.r.t bias
     '''
-    def backward(self, grad_input):
+    def backward(self, grad_output):
         ##################################################
         # TODO: YOUR CODE HERE: backward
         ##################################################        
-        grad_bias = np.einsum('No -> o', grad_input)
-        grad_weight = np.einsum('Ni,No -> io', self.input, grad_input)
-        grad_output = np.einsum('io,No -> Ni', self.weight, grad_input)
-        return grad_output, grad_weight, grad_bias
+        grad_bias = np.einsum('No -> o', grad_output)
+        grad_weight = np.einsum('Ni,No -> io', self.input, grad_output)
+        grad_input = np.einsum('io,No -> Ni', self.weight, grad_output)
+        return grad_input, grad_weight, grad_bias
 
 '''
     BatchNorm1D
