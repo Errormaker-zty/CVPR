@@ -198,7 +198,7 @@ class ReLU(object):
     '''
     def backward(self, grad_output):
         grad_input = grad_output.copy()
-        grad_output[self.input<0] = 0
+        grad_input[self.input<0] = 0
         return grad_input
 '''
     CROSS_ENTROPY_LOSS_WITH_SOFTMAX
