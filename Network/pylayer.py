@@ -41,7 +41,7 @@ class Linear(object):
         ##################################################
         # output = np.dot(self.input, self.weight)
         output = np.einsum('Ni,io -> No', self.input, self.weight)
-        return output
+        return output + self.bias
 
     '''
         Backward computation of linear layer, you need to compute the gradient
