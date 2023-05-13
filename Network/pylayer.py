@@ -67,6 +67,7 @@ class Linear(object):
 
 '''
     BatchNorm1D
+    DO NOT USE
     Implementation of batch normalization (or BN) layer, which performs normalization and rescaling
     on input data. Specifically, for input data X of shape (N,input_channel), BN layers firstly normalized the data along batch dimension
     by the mean E(x), variance Var(X) that are computed within batch data and both have shape of (input_channel)
@@ -95,74 +96,74 @@ class Linear(object):
         input_channel -- integer, number of input channel
         momentum      -- float,   the momentum value used for the running_mean and running_var computation
 '''
-class BatchNorm1d(object):
+# class BatchNorm1d(object):
 
-    def __init__(self, input_channel, momentum = 0.9):
-        self.input_channel = input_channel
-        self.momentum = momentum
-        self.eps = 1e-3
-        self.init_param()
+#     def __init__(self, input_channel, momentum = 0.9):
+#         self.input_channel = input_channel
+#         self.momentum = momentum
+#         self.eps = 1e-3
+#         self.init_param()
 
-    def init_param(self):
-        self.r_mean = np.zeros((self.input_channel)).astype(np.float32)
-        self.r_var = np.ones((self.input_channel)).astype(np.float32)
-        self.beta = np.zeros((self.input_channel)).astype(np.float32)
-        self.gamma = (np.random.rand(self.input_channel) * sqrt(2.0/(self.input_channel))).astype(np.float32)
-    '''
-        Forward computation of batch normalization layer and momentumly updated the running mean and running variance
-        You may want to save some intermediate variables to class membership (self.) and you should take care of different behaviors
-        during training and testing.
+#     def init_param(self):
+#         self.r_mean = np.zeros((self.input_channel)).astype(np.float32)
+#         self.r_var = np.ones((self.input_channel)).astype(np.float32)
+#         self.beta = np.zeros((self.input_channel)).astype(np.float32)
+#         self.gamma = (np.random.rand(self.input_channel) * sqrt(2.0/(self.input_channel))).astype(np.float32)
+#     '''
+#         Forward computation of batch normalization layer and momentumly updated the running mean and running variance
+#         You may want to save some intermediate variables to class membership (self.) and you should take care of different behaviors
+#         during training and testing.
 
-        Arguments:
-            input -- numpy array (N, input_channel)
-            train -- bool, boolean indicator to specify the running mode, True for training and False for testing
-    '''
-    def forward(self, input, train):
-        ##########################################################################
-        # TODO: YOUR CODE HERE
-        ##########################################################################
-        self.input = input
-        if train:
-            mu = np.mean(input, axis =0)
-            var = np.var(input, axis =0)
-            self.mu = mu
-            self.var = var
-            self.r_mean = self.r_mean * self.momentum + (1 - self.momentum) * mu
-            self.r_var = self.r_var * self.momentum + (1 - self.momentum) * var
-            self.input_norm = (input - mu[None,:]) / np.sqrt(var[None,:] + self.eps)
-            output = (self.input_norm * self.gamma) + self.beta
-        else:
-            input_norm = (input - self.r_mean[None,:])/np.sqrt(self.r_var[None,:] + self.eps)
-            output = (input_norm * self.gamma[None,:]) + self.beta[None,:]
-        return output
-    '''
-        Backward computationg of batch normalization layer
-        You need to write gradient w.r.t input data, gamma and beta
-        It's recommend to follow the chain rule to firstly compute the gradient w.r.t to intermediate variable to
-        simplify the computation.
+#         Arguments:
+#             input -- numpy array (N, input_channel)
+#             train -- bool, boolean indicator to specify the running mode, True for training and False for testing
+#     '''
+#     def forward(self, input, train):
+#         ##########################################################################
+#         # TODO: YOUR CODE HERE
+#         ##########################################################################
+#         self.input = input
+#         if train:
+#             mu = np.mean(input, axis =0)
+#             var = np.var(input, axis =0)
+#             self.mu = mu
+#             self.var = var
+#             self.r_mean = self.r_mean * self.momentum + (1 - self.momentum) * mu
+#             self.r_var = self.r_var * self.momentum + (1 - self.momentum) * var
+#             self.input_norm = (input - mu[None,:]) / np.sqrt(var[None,:] + self.eps)
+#             output = (self.input_norm * self.gamma) + self.beta
+#         else:
+#             input_norm = (input - self.r_mean[None,:])/np.sqrt(self.r_var[None,:] + self.eps)
+#             output = (input_norm * self.gamma[None,:]) + self.beta[None,:]
+#         return output
+#     '''
+#         Backward computationg of batch normalization layer
+#         You need to write gradient w.r.t input data, gamma and beta
+#         It's recommend to follow the chain rule to firstly compute the gradient w.r.t to intermediate variable to
+#         simplify the computation.
 
-        Arguments:
-            grad_output -- numpy array of shape (N, input_channel)
+#         Arguments:
+#             grad_output -- numpy array of shape (N, input_channel)
 
-        Output:
-            grad_input -- numpy array of shape (N, input_channel), gradient w.r.t input
-            grad_gamma -- numpy array of shape (input_channel), gradient w.r.t gamma
-            grad_beta  -- numpy array of shape (input_channel), gradient w.r.t beta
-    '''
-    def backward(self, grad_output):
-        ##########################################################################
-        # TODO: YOUR CODE HERE
-        ##########################################################################
-        N = grad_output.shape[0]
-        dxdhat = self.gamma[None,:] * grad_output
-        output_term1 =  (1./N) * 1./np.sqrt(self.var + self.eps)
-        output_term2 = N * dxdhat
-        output_term3 = np.sum(dxdhat, axis=0)
-        output_term4 = self.input_norm * np.sum(dxdhat * self.input_norm, axis=0)
-        grad_input = output_term1 * (output_term2 - output_term3 - output_term4)
-        grad_gamma = np.sum(grad_output * self.input_norm, axis = 0)
-        grad_beta = np.sum(grad_output, axis = 0)
-        return grad_input, grad_gamma, grad_beta
+#         Output:
+#             grad_input -- numpy array of shape (N, input_channel), gradient w.r.t input
+#             grad_gamma -- numpy array of shape (input_channel), gradient w.r.t gamma
+#             grad_beta  -- numpy array of shape (input_channel), gradient w.r.t beta
+#     '''
+#     def backward(self, grad_output):
+#         ##########################################################################
+#         # TODO: YOUR CODE HERE
+#         ##########################################################################
+#         N = grad_output.shape[0]
+#         dxdhat = self.gamma[None,:] * grad_output
+#         output_term1 =  (1./N) * 1./np.sqrt(self.var + self.eps)
+#         output_term2 = N * dxdhat
+#         output_term3 = np.sum(dxdhat, axis=0)
+#         output_term4 = self.input_norm * np.sum(dxdhat * self.input_norm, axis=0)
+#         grad_input = output_term1 * (output_term2 - output_term3 - output_term4)
+#         grad_gamma = np.sum(grad_output * self.input_norm, axis = 0)
+#         grad_beta = np.sum(grad_output, axis = 0)
+#         return grad_input, grad_gamma, grad_beta
 
 '''
     RELU
@@ -384,28 +385,28 @@ class Flatten(object):
     def backward(self, grad_input):
         return grad_input.reshape(self.inshape)
 
-class BatchNorm2d(BatchNorm1d):
-    def __init__(self, input_channel, momentum = 0.9):
-        super(BatchNorm2d, self).__init__(input_channel, momentum)
-    @staticmethod
-    def to_inner(tensor):
-        tensor = tensor.transpose(0, 2, 3, 1)
-        tensor = tensor.reshape(-1, tensor.shape[-1])
-        # tensor is NHW, C
-        return tensor
-    def to_outer(self, tensor):
-        # tensor is NHW, C
-        N, C, H, W = self.in_shape
-        tensor = tensor.reshape(N, H, W, C)
-        tensor = tensor.transpose(0, 3, 1, 2)
-        return tensor
-    def forward(self, input, train):
-        self.in_shape = input.shape
-        output = super(BatchNorm2d, self).forward(self.to_inner(input), train)
-        return self.to_outer(output)
-    def backward(self, grad_output):
-        grad_input, grad_gamma, grad_beta = super(BatchNorm2d, self).backward(self.to_inner(grad_output))
-        return self.to_outer(grad_input), grad_gamma, grad_beta
+# class BatchNorm2d(BatchNorm1d):
+#     def __init__(self, input_channel, momentum = 0.9):
+#         super(BatchNorm2d, self).__init__(input_channel, momentum)
+#     @staticmethod
+#     def to_inner(tensor):
+#         tensor = tensor.transpose(0, 2, 3, 1)
+#         tensor = tensor.reshape(-1, tensor.shape[-1])
+#         # tensor is NHW, C
+#         return tensor
+#     def to_outer(self, tensor):
+#         # tensor is NHW, C
+#         N, C, H, W = self.in_shape
+#         tensor = tensor.reshape(N, H, W, C)
+#         tensor = tensor.transpose(0, 3, 1, 2)
+#         return tensor
+#     def forward(self, input, train):
+#         self.in_shape = input.shape
+#         output = super(BatchNorm2d, self).forward(self.to_inner(input), train)
+#         return self.to_outer(output)
+#     def backward(self, grad_output):
+#         grad_input, grad_gamma, grad_beta = super(BatchNorm2d, self).backward(self.to_inner(grad_output))
+#         return self.to_outer(grad_input), grad_gamma, grad_beta
 
 class BasicBlock(object):
     expansion = 1
@@ -413,9 +414,9 @@ class BasicBlock(object):
         super(BasicBlock, self).__init__()
         # Layers
         self.conv1 = Conv2d(in_channels, out_channels, (3, 3), padding=1, stride=stride)#, bias=False)
-        self.bn1 = BatchNorm2d(out_channels)
+        # self.bn1 = BatchNorm2d(out_channels)
         self.conv2 = Conv2d(out_channels, out_channels, (3, 3), padding=1, stride=1)#, bias=False)
-        self.bn2 = BatchNorm2d(out_channels)
+        # self.bn2 = BatchNorm2d(out_channels)
         self.relu1, self.relu2 = ReLU(), ReLU()
         self.downsample = downsample
 
@@ -470,11 +471,11 @@ class BottleNeck(object):
         super(BottleNeck, self).__init__()
         # layers
         self.conv1 = Conv2d(in_channels, out_channels, (1, 1))#, bias=False)
-        self.bn1 = BatchNorm2d(out_channels)
+        # self.bn1 = BatchNorm2d(out_channels)
         self.conv2 = Conv2d(out_channels, out_channels, (3, 3), padding=1, stride=stride)#, bias=False)
-        self.bn2 = BatchNorm2d(out_channels)
+        # self.bn2 = BatchNorm2d(out_channels)
         self.conv3 = Conv2d(out_channels, out_channels*self.expansion, (1, 1))#, bias=False)
-        self.bn3 = BatchNorm2d(out_channels*self.expansion)
+        # self.bn3 = BatchNorm2d(out_channels*self.expansion)
         self.relu1, self.relu2, self.relu3 = ReLU(), ReLU(), ReLU()
         self.downsample = downsample
 
