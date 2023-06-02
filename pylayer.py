@@ -232,6 +232,8 @@ class CrossEntropyLossWithSoftmax(object):
             output   -- numpy array of shape (N), containing the cross entropy loss on each input
     '''
     def forward(self, input, gt_label):
+        t = np.max(input,axis=1).reshape(input.shape[0],1)
+        input = input - t
         exp = np.exp(input)
         self.gt_label = gt_label
         self.prob = exp / np.sum(exp, axis = -1)[:,None]
@@ -350,6 +352,8 @@ class MaxPool2d:
 
         self.x = x
         self.arg_max = arg_max
+
+        print(x.shape,out.shape)
 
         return out
 
